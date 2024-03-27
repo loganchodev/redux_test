@@ -1,27 +1,37 @@
 import React, {useState} from "react";
 import "./Style.css";
+import { createStore } from 'redux';
+import { Provider, useSelector, useDispatch, connect } from 'react-redux';
+
+function reducer(currentState, action) {
+  if(currentState === undefined) {
+    return {
+      number: 1,
+    };
+  }
+  const newState = {...currentState};
+  if(action.type === 'PLUS') {
+    newState.number++;
+  }
+  return newState;
+}
+
+const store = createStore(reducer);
 
 export default function App() {
-  const [number, setNumber] = useState(1);
   return (
     <div id="container">
-      <h1>Root : {number}</h1>
+      <h1>Root</h1>
       <div id="grid">
-        <Lefimport number={number}></Lefimport React, { useState } from 'react';
-import './style.css';
-
-export default function App() {
-  const [number, setNumber] = useState(1);
-  return (
-    <div id="container">
-      <h1>Root : {number}</h1>
-      <div id="grid">
-        <Left1></Left1>
-        <Right1></Right1>
+        <Provider store={store}>
+          <Left1></Left1>
+          <Right1></Right1>
+        </Provider>
       </div>
     </div>
   );
-}
+};
+
 function Left1(props) {
   return (
     <div>
@@ -39,9 +49,13 @@ function Left2(props) {
   );
 }
 function Left3(props) {
+  function f(state){
+    return state.number;
+  }
+  const number = useSelector((state) => state.number);
   return (
     <div>
-      <h1>Left3 : </h1>
+      <h1>Left3 : {number}</h1>
     </div>
   );
 }
@@ -62,72 +76,18 @@ function Right2(props) {
   );
 }
 function Right3(props) {
+  const dispatch = useDispatch(); // useDispatch Hook을 사용하여 dispatch 함수를 가져옴
   return (
     <div>
       <h1>Right3</h1>
-      <input type="button" value="+" onClick={() => {}}></input>
+      <input 
+        type="button" 
+        value="+" 
+        onClick={() => {
+          dispatch({ type: 'PLUS' });
+        }}
+      ></input>
     </div>
   );
 }
-t1>
-        <Right1 onIncrease={()=>{
-          setNumber(number + 1);
-        }}></Right1>
-      </div>
-    </div>
-  );
-};
-
-function Right1(props) {
-  return (
-    <div>
-      <h1>Right1</h1>
-      <Right2 onIncrease={()=>{props.onIncrease();}}></Right2>
-    </div>
-  );
-};
-
-function Right2(props) {
-  return (
-    <div>
-      <h1>Right2</h1>
-      <Right3 onIncrease={()=>{props.onIncrease();}}></Right3>
-    </div>
-  );
-};
-
-function Right3(props) {
-  return (
-    <div>
-      <h1>Right3</h1>
-      <input type="button" value="+" onClick={()=>{props.onIncrease();}}></input>
-    </div>
-  );
-};
-
-function Left1(props) {
-  return (
-    <div>
-      <h1>Left1 : {props.number}</h1>
-      <Left2 number={props.number}></Left2>
-    </div>
-  );
-};
-
-function Left2(props) {
-  return (
-    <div>
-      <h1>Left2 : {props.number}</h1>
-      <Left3 number={props.number}></Left3>
-    </div>
-  );
-};
-
-function Left3(props) {
-  return (
-    <div>
-      <h1>Left3 : {props.number}</h1>
-    </div>
-  );
-};
 
